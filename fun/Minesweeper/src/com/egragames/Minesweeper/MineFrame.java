@@ -23,44 +23,29 @@ public class MineFrame extends JFrame implements GameActable {
     /* Frame Components */
 
     private JLabel jlbMinesLeft;
-    private JButton
-            cellButtons[][],
-            jbtHint;
+    private JButton cellButtons[][], jbtHint;
+    private JPanel fieldPanel;
 
     /* Frame Sizes and Offsets */
 
-    private int
-            cellSize = 30,
-            topPanelHeight = 37;
+    private int cellSize = 30, topPanelHeight = 37;
     private Dimension fieldGaps = new Dimension(1, 1);
     private Border borderTopPanel = BorderFactory.createEmptyBorder(5, 14, 0, 14);
 
-
-    /* Fonts */
-
-    private Font
-            jlbMinesLeftFont = new Font("Arial", Font.BOLD, 15),
-            jbtFont = new Font("Arial", Font.PLAIN, 15);
-
     /* Colors */
 
-    private Color
-            jlbMinesLeftFontColor = new Color(255, 0, 0),
-            jbtFontColor = new Color(0, 0, 0),
-            frameBackgroundColor = new Color(255, 255, 255);
+    private Color frameBackgroundColor = new Color(255, 255, 255);
 
     /* Images */
 
-    private ImageIcon
-            imgNumbers[] = new ImageIcon[9],
+    private ImageIcon imgNumbers[] = new ImageIcon[9],
             imgQuestion,
             imgMine,
             imgFlag;
 
     /* Mode limits */
 
-    private int
-            minRows = 20,
+    private int minRows = 20,
             maxRows = 30,
             minCols = 20,
             maxCols = 50,
@@ -71,7 +56,7 @@ public class MineFrame extends JFrame implements GameActable {
     /*=======================Constructors=======================*/
     
 
-    MineFrame(){
+    private MineFrame(){
         super(strings.getString("heading"));
         try{
             loadImages();
@@ -80,6 +65,8 @@ public class MineFrame extends JFrame implements GameActable {
             JOptionPane.showMessageDialog(null, strings.getString("exceptionLoadGraphics"), strings.getString("titleException"), JOptionPane.ERROR_MESSAGE);
             System.exit(1);
         }
+        game = new MineGame(20, 20, 4, this);
+        initFrameAndComponents();
     }
     
     
@@ -100,22 +87,14 @@ public class MineFrame extends JFrame implements GameActable {
         }
     }
     
-    private void buildFrame(){
-        Dimension screenRes = Toolkit.getDefaultToolkit().getScreenSize();
-        Point framePlacement = new Point();
-        int fieldWidth = game.getCols()*cellSize, fieldHeight = game.getRows()*cellSize;
-        framePlacement.setLocation((screenRes.width-fieldWidth)/2, (screenRes.height-fieldHeight-topPanelHeight)/2);
-
-        setBounds(framePlacement.x, framePlacement.y, fieldWidth, fieldHeight+topPanelHeight);
+    private void initFrameAndComponents(){
+        Dimension screenRes = Toolkit.getDefaultToolkit().getScreenSize(),
+                fieldRes = new Dimension(game.getCols()*cellSize, game.getRows()*cellSize);
+        setBounds((screenRes.width-fieldRes.width)/2, (screenRes.height-fieldRes.height)/2, fieldRes.width, fieldRes.height+topPanelHeight);
         setBackground(frameBackgroundColor);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        buildComponents();
-        setVisible(true);
-    }
-
-    private void buildComponents(){
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(frameBackgroundColor);
 
@@ -125,148 +104,25 @@ public class MineFrame extends JFrame implements GameActable {
         topPanel.setPreferredSize(new Dimension(getWidth(), topPanelHeight));
         topPanel.setBackground(frameBackgroundColor);
 
-        JPanel fieldPanel = new JPanel(new GridLayout(game.getRows(), game.getCols(), fieldGaps.width, fieldGaps.height));
+        fieldPanel = new JPanel(new GridLayout(game.getRows(), game.getCols(), fieldGaps.width, fieldGaps.height));
         fieldPanel.setBackground(frameBackgroundColor);
 
-        JButton jbtRestart = new JButton(strings.getString("titleRestart"));
-        jbtRestart.setFocusPainted(false);
-        jbtRestart.setForeground(jbtFontColor);
-        jbtRestart.setFont(jbtFont);
-        jbtRestart.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (SwingUtilities.isLeftMouseButton(e)){
-                    int choice = JOptionPane.showOptionDialog(null, strings.getString("messageRestart"), strings.getString("titleRestart"),
-                            JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[]{strings.getString("optionYes"),
-                                    strings.getString("optionNo")}, strings.getString("optionYes"));
-                    if (choice == JOptionPane.YES_OPTION)
-                        restartGame();
-                }
-            }
-            @Override
-            public void mousePressed(MouseEvent e) {}
-            @Override
-            public void mouseReleased(MouseEvent e) {}
-            @Override
-            public void mouseEntered(MouseEvent e) {}
-            @Override
-            public void mouseExited(MouseEvent e) {}
-        });
+        JButton jbtRestart = new UIButton(strings.getString("titleRestart"));
+        jbtRestart.addMouseListener(new RestartButtonMouseListener());
 
-        jbtHint = new JButton(strings.getString("titleHint"));
-        jbtHint.setFocusPainted(false);
-        jbtHint.setForeground(jbtFontColor);
-        jbtHint.setFont(jbtFont);
-        jbtHint.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (SwingUtilities.isLeftMouseButton(e)) {
-                    if (!jbtHint.isEnabled()) return;
-                    jbtHint.setEnabled(false);
-                    game.getHint();
-                }
-            }
-            @Override
-            public void mousePressed(MouseEvent e) {}
-            @Override
-            public void mouseReleased(MouseEvent e) {}
-            @Override
-            public void mouseEntered(MouseEvent e) {}
-            @Override
-            public void mouseExited(MouseEvent e) {}
-        });
+        jbtHint = new UIButton(strings.getString("titleHint"));
+        jbtHint.addMouseListener(new HintButtonMouseListener());
 
-        JButton jbtChangeMode = new JButton(strings.getString("titleChangeMode"));
-        jbtChangeMode.setFocusPainted(false);
-        jbtChangeMode.setForeground(jbtFontColor);
-        jbtChangeMode.setFont(jbtFont);
-        jbtChangeMode.addMouseListener(new MouseListener() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                JLabel jlbSelRows = new JLabel();
-                JLabel jlbSelCols = new JLabel();
-                JLabel jlbSelDif = new JLabel();
+        JButton jbtChangeMode = new UIButton(strings.getString("titleChangeMode"));
+        jbtChangeMode.addMouseListener(new ChangeModeButtonMouseListener());
 
-                JSlider sldRows = new JSlider(SwingConstants.HORIZONTAL, minRows, maxRows, game.getRows());
-                sldRows.addChangeListener(el ->
-                        jlbSelRows.setText(strings.getString("textSelRows") + sldRows.getValue())
-                );
-                JSlider sldCols = new JSlider(SwingConstants.HORIZONTAL, minCols, maxCols, game.getCols());
-                sldCols.addChangeListener(el ->
-                        jlbSelCols.setText(strings.getString("textSelCols") + sldCols.getValue())
-                );
-                JSlider sldDifficulty = new JSlider(SwingConstants.HORIZONTAL, minDifficulty, maxDifficulty, game.getDifficulty());
-                sldDifficulty.addChangeListener(el ->
-                        jlbSelDif.setText(strings.getString("textSelDif") + sldDifficulty.getValue())
-                );
-
-                jlbSelRows.setText(strings.getString("textSelRows") + sldRows.getValue());
-                jlbSelCols.setText(strings.getString("textSelCols") + sldCols.getValue());
-                jlbSelDif.setText(strings.getString("textSelDif") + sldDifficulty.getValue());
-
-                final JComponent[] inputs = {
-                        jlbSelRows, sldRows,
-                        jlbSelCols, sldCols,
-                        jlbSelDif, sldDifficulty
-                };
-                int choice = JOptionPane.showOptionDialog(null, inputs, strings.getString("titleChangeMode"),
-                        JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[]{strings.getString("optionYes"),
-                                strings.getString("optionNo")}, strings.getString("optionYes"));
-                if (choice == JOptionPane.NO_OPTION) return;
-                restartGame(sldRows.getValue(), sldCols.getValue(), sldDifficulty.getValue());
-            }
-            @Override
-            public void mousePressed(MouseEvent e) {}
-            @Override
-            public void mouseReleased(MouseEvent e) {}
-            @Override
-            public void mouseEntered(MouseEvent e) {}
-            @Override
-            public void mouseExited(MouseEvent e) {}
-        });
-
-        jlbMinesLeft = new JLabel(strings.getString("textCellsLeft") + String.valueOf(game.getFreeCellsNumber()));
-        jlbMinesLeft.setForeground(jlbMinesLeftFontColor);
-        jlbMinesLeft.setFont(jlbMinesLeftFont);
+        jlbMinesLeft = new UILabel(strings.getString("textCellsLeft") + String.valueOf(game.getFreeCellsNumber()));
 
         cellButtons = new JButton[game.getRows()][game.getCols()];
         for(int i=0; i<game.getRows(); i++){
             for(int j=0; j<game.getCols(); j++){
-                cellButtons[i][j] = new JButton();
-                cellButtons[i][j].setFocusPainted(false);
-                cellButtons[i][j].setMargin(new Insets(0, 0, 0, 0));
-                int finalI = i, finalJ = j;
-                cellButtons[i][j].addMouseListener(new MouseListener() {
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        if (game.isOpened(finalJ, finalI)) return;
-
-                        if (SwingUtilities.isLeftMouseButton(e)) {
-                            if (imgFlag.equals(cellButtons[finalI][finalJ].getIcon())) return;
-                            if (jbtHint.isEnabled())
-                                jbtHint.setEnabled(false);
-                            game.pushCell(finalJ, finalI);
-                        } else if (SwingUtilities.isRightMouseButton(e)){
-                            if (!imgFlag.equals(cellButtons[finalI][finalJ].getIcon()))
-                                cellButtons[finalI][finalJ].setIcon(imgFlag);
-                            else
-                                cellButtons[finalI][finalJ].setIcon(null);
-                        } else if (SwingUtilities.isMiddleMouseButton(e)){
-                            if (!imgQuestion.equals(cellButtons[finalI][finalJ].getIcon()))
-                                cellButtons[finalI][finalJ].setIcon(imgQuestion);
-                            else
-                                cellButtons[finalI][finalJ].setIcon(null);
-                        }
-                    }
-                    @Override
-                    public void mousePressed(MouseEvent e) {}
-                    @Override
-                    public void mouseReleased(MouseEvent e) {}
-                    @Override
-                    public void mouseEntered(MouseEvent e) {}
-                    @Override
-                    public void mouseExited(MouseEvent e) {}
-                });
+                cellButtons[i][j] = new CellButton();
+                cellButtons[i][j].addMouseListener(new CellButtonMouseListener(i, j));
                 fieldPanel.add(cellButtons[i][j]);
             }
         }
@@ -282,12 +138,28 @@ public class MineFrame extends JFrame implements GameActable {
         mainPanel.add(topPanel, BorderLayout.NORTH);
         mainPanel.add(fieldPanel, BorderLayout.CENTER);
         add(mainPanel);
+
+        setVisible(true);
     }
 
     private void restartGame(int rows, int cols, int difficulty){
         dispose();
-        getContentPane().removeAll();
-        startGame(rows, cols, difficulty);
+        fieldPanel.removeAll();
+        game = new MineGame(rows, cols, difficulty, this);
+        Dimension screenRes = Toolkit.getDefaultToolkit().getScreenSize(),
+                fieldRes = new Dimension(game.getCols()*cellSize, game.getRows()*cellSize);
+        setBounds((screenRes.width-fieldRes.width)/2, (screenRes.height-fieldRes.height)/2, fieldRes.width, fieldRes.height+topPanelHeight);
+        cellButtons = new JButton[game.getRows()][game.getCols()];
+        for(int i=0; i<game.getRows(); i++){
+            for(int j=0; j<game.getCols(); j++){
+                cellButtons[i][j] = new CellButton();
+                cellButtons[i][j].addMouseListener(new CellButtonMouseListener(i, j));
+                fieldPanel.add(cellButtons[i][j]);
+            }
+        }
+        jlbMinesLeft.setText(strings.getString("textCellsLeft") + String.valueOf(game.getFreeCellsNumber()));
+        jbtHint.setEnabled(true);
+
         setVisible(true);
     }
 
@@ -304,9 +176,8 @@ public class MineFrame extends JFrame implements GameActable {
     /*======================Public Methods======================*/
 
 
-    void startGame(int rows, int cols, int difficulty){
-        game = new MineGame(rows, cols, difficulty, this);
-        buildFrame();
+    public static void main(String[] args){
+        SwingUtilities.invokeLater(MineFrame::new);
     }
 
 
@@ -346,6 +217,157 @@ public class MineFrame extends JFrame implements GameActable {
     public void refuseHint() {
         JOptionPane.showMessageDialog(null, strings.getString("messageHintRefused"),
                 strings.getString("titleHint"), JOptionPane.PLAIN_MESSAGE);
+    }
+
+
+    /*======================Nested Classes======================*/
+
+
+    private class RestartButtonMouseListener implements MouseListener{
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (SwingUtilities.isLeftMouseButton(e)){
+                int choice = JOptionPane.showOptionDialog(null, strings.getString("messageRestart"), strings.getString("titleRestart"),
+                        JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[]{strings.getString("optionYes"),
+                                strings.getString("optionNo")}, strings.getString("optionYes"));
+                if (choice == JOptionPane.YES_OPTION)
+                    restartGame();
+            }
+        }
+        @Override
+        public void mousePressed(MouseEvent e) {}
+        @Override
+        public void mouseReleased(MouseEvent e) {}
+        @Override
+        public void mouseEntered(MouseEvent e) {}
+        @Override
+        public void mouseExited(MouseEvent e) {}
+    }
+
+    private class HintButtonMouseListener implements MouseListener{
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                if (!jbtHint.isEnabled()) return;
+                jbtHint.setEnabled(false);
+                game.getHint();
+            }
+        }
+        @Override
+        public void mousePressed(MouseEvent e) {}
+        @Override
+        public void mouseReleased(MouseEvent e) {}
+        @Override
+        public void mouseEntered(MouseEvent e) {}
+        @Override
+        public void mouseExited(MouseEvent e) {}
+    }
+
+    private class ChangeModeButtonMouseListener implements MouseListener{
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            JLabel jlbSelRows = new JLabel();
+            JLabel jlbSelCols = new JLabel();
+            JLabel jlbSelDif = new JLabel();
+
+            JSlider sldRows = new JSlider(SwingConstants.HORIZONTAL, minRows, maxRows, game.getRows());
+            sldRows.addChangeListener(el ->
+                    jlbSelRows.setText(strings.getString("textSelRows") + sldRows.getValue())
+            );
+            JSlider sldCols = new JSlider(SwingConstants.HORIZONTAL, minCols, maxCols, game.getCols());
+            sldCols.addChangeListener(el ->
+                    jlbSelCols.setText(strings.getString("textSelCols") + sldCols.getValue())
+            );
+            JSlider sldDifficulty = new JSlider(SwingConstants.HORIZONTAL, minDifficulty, maxDifficulty, game.getDifficulty());
+            sldDifficulty.addChangeListener(el ->
+                    jlbSelDif.setText(strings.getString("textSelDif") + sldDifficulty.getValue())
+            );
+
+            jlbSelRows.setText(strings.getString("textSelRows") + sldRows.getValue());
+            jlbSelCols.setText(strings.getString("textSelCols") + sldCols.getValue());
+            jlbSelDif.setText(strings.getString("textSelDif") + sldDifficulty.getValue());
+
+            final JComponent[] inputs = {
+                    jlbSelRows, sldRows,
+                    jlbSelCols, sldCols,
+                    jlbSelDif, sldDifficulty
+            };
+            int choice = JOptionPane.showOptionDialog(null, inputs, strings.getString("titleChangeMode"),
+                    JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[]{strings.getString("optionYes"),
+                            strings.getString("optionNo")}, strings.getString("optionYes"));
+            if (choice == JOptionPane.NO_OPTION) return;
+            restartGame(sldRows.getValue(), sldCols.getValue(), sldDifficulty.getValue());
+        }
+        @Override
+        public void mousePressed(MouseEvent e) {}
+        @Override
+        public void mouseReleased(MouseEvent e) {}
+        @Override
+        public void mouseEntered(MouseEvent e) {}
+        @Override
+        public void mouseExited(MouseEvent e) {}
+    }
+
+    private class CellButtonMouseListener implements MouseListener{
+        int i, j;
+        CellButtonMouseListener(int i, int j){ this.i = i; this.j = j; }
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (game.isOpened(j, i)) return;
+
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                if (imgFlag.equals(cellButtons[i][j].getIcon())) return;
+                if (jbtHint.isEnabled())
+                    jbtHint.setEnabled(false);
+                game.pushCell(j, i);
+            } else if (SwingUtilities.isRightMouseButton(e)){
+                if (!imgFlag.equals(cellButtons[i][j].getIcon()))
+                    cellButtons[i][j].setIcon(imgFlag);
+                else
+                    cellButtons[i][j].setIcon(null);
+            } else if (SwingUtilities.isMiddleMouseButton(e)){
+                if (!imgQuestion.equals(cellButtons[i][j].getIcon()))
+                    cellButtons[i][j].setIcon(imgQuestion);
+                else
+                    cellButtons[i][j].setIcon(null);
+            }
+        }
+        @Override
+        public void mousePressed(MouseEvent e) {}
+        @Override
+        public void mouseReleased(MouseEvent e) {}
+        @Override
+        public void mouseEntered(MouseEvent e) {}
+        @Override
+        public void mouseExited(MouseEvent e) {}
+    }
+
+    private static class UIButton extends JButton{
+        private static Font jbtFont = new Font("Arial", Font.PLAIN, 15);
+        private static Color jbtFontColor = new Color(0, 0, 0);
+        UIButton(String text){
+            super(text);
+            setFocusPainted(false);
+            setForeground(jbtFontColor);
+            setFont(jbtFont);
+        }
+    }
+
+    private static class CellButton extends JButton{
+        CellButton(){
+            setFocusPainted(false);
+            setMargin(new Insets(0, 0, 0, 0));
+        }
+    }
+
+    private static class UILabel extends JLabel{
+        private static Font jlbFont = new Font("Arial", Font.BOLD, 15);
+        private static Color jlbFontColor = new Color(255, 0, 0);
+        UILabel(String text){
+            super(text);
+            setForeground(jlbFontColor);
+            setFont(jlbFont);
+        }
     }
 
 
