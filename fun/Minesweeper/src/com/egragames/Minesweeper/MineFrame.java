@@ -1,12 +1,20 @@
 package com.egragames.Minesweeper;
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+
 import javax.imageio.ImageIO;
+import javax.sound.sampled.*;
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ResourceBundle;
 
 public class MineFrame extends JFrame implements GameActable {
@@ -22,8 +30,9 @@ public class MineFrame extends JFrame implements GameActable {
 
     /* Frame Components */
 
-    private JLabel jlbMinesLeft;
-    private JButton cellButtons[][], jbtHint;
+    private UILabel jlbMinesLeft;
+    private CellButton cellButtons[][];
+    private UIButton jbtHint;
     private JPanel fieldPanel;
 
     /* Frame Sizes and Offsets */
@@ -51,7 +60,7 @@ public class MineFrame extends JFrame implements GameActable {
             maxCols = 50,
             minDifficulty = 1,
             maxDifficulty = 8;
-    
+
     
     /*=======================Constructors=======================*/
     
@@ -118,7 +127,7 @@ public class MineFrame extends JFrame implements GameActable {
 
         jlbMinesLeft = new UILabel(strings.getString("textCellsLeft") + String.valueOf(game.getFreeCellsNumber()));
 
-        cellButtons = new JButton[game.getRows()][game.getCols()];
+        cellButtons = new CellButton[game.getRows()][game.getCols()];
         for(int i=0; i<game.getRows(); i++){
             for(int j=0; j<game.getCols(); j++){
                 cellButtons[i][j] = new CellButton();
@@ -149,7 +158,7 @@ public class MineFrame extends JFrame implements GameActable {
         Dimension screenRes = Toolkit.getDefaultToolkit().getScreenSize(),
                 fieldRes = new Dimension(game.getCols()*cellSize, game.getRows()*cellSize);
         setBounds((screenRes.width-fieldRes.width)/2, (screenRes.height-fieldRes.height)/2, fieldRes.width, fieldRes.height+topPanelHeight);
-        cellButtons = new JButton[game.getRows()][game.getCols()];
+        cellButtons = new CellButton[game.getRows()][game.getCols()];
         for(int i=0; i<game.getRows(); i++){
             for(int j=0; j<game.getCols(); j++){
                 cellButtons[i][j] = new CellButton();
@@ -266,37 +275,42 @@ public class MineFrame extends JFrame implements GameActable {
     private class ChangeModeButtonMouseListener implements MouseListener{
         @Override
         public void mouseClicked(MouseEvent e) {
-            JLabel jlbSelRows = new JLabel();
-            JLabel jlbSelCols = new JLabel();
-            JLabel jlbSelDif = new JLabel();
+            JLabel jlbSelRows = new JLabel(),
+                    jlbSelCols = new JLabel(),
+                    jlbSelDif = new JLabel();
 
-            JSlider sldRows = new JSlider(SwingConstants.HORIZONTAL, minRows, maxRows, game.getRows());
-            sldRows.addChangeListener(el ->
-                    jlbSelRows.setText(strings.getString("textSelRows") + sldRows.getValue())
-            );
-            JSlider sldCols = new JSlider(SwingConstants.HORIZONTAL, minCols, maxCols, game.getCols());
-            sldCols.addChangeListener(el ->
-                    jlbSelCols.setText(strings.getString("textSelCols") + sldCols.getValue())
-            );
-            JSlider sldDifficulty = new JSlider(SwingConstants.HORIZONTAL, minDifficulty, maxDifficulty, game.getDifficulty());
-            sldDifficulty.addChangeListener(el ->
-                    jlbSelDif.setText(strings.getString("textSelDif") + sldDifficulty.getValue())
-            );
+            JSlider sldRows = new JSlider(SwingConstants.HORIZONTAL, minRows, maxRows, game.getRows()),
+                    sldCols = new JSlider(SwingConstants.HORIZONTAL, minCols, maxCols, game.getCols()),
+                    sldDif = new JSlider(SwingConstants.HORIZONTAL, minDifficulty, maxDifficulty, game.getDifficulty());
+
+            ChangeListener clRows = e1 -> jlbSelRows.setText(strings.getString("textSelRows") + sldRows.getValue()),
+                    clCols = el -> jlbSelCols.setText(strings.getString("textSelCols") + sldCols.getValue()),
+                    clDif = el -> jlbSelDif.setText(strings.getString("textSelDif") + sldDif.getValue());
+
+
+            sldRows.addChangeListener(clRows);
+            sldCols.addChangeListener(clCols);
+            sldDif.addChangeListener(clDif);
 
             jlbSelRows.setText(strings.getString("textSelRows") + sldRows.getValue());
             jlbSelCols.setText(strings.getString("textSelCols") + sldCols.getValue());
-            jlbSelDif.setText(strings.getString("textSelDif") + sldDifficulty.getValue());
+            jlbSelDif.setText(strings.getString("textSelDif") + sldDif.getValue());
 
             final JComponent[] inputs = {
                     jlbSelRows, sldRows,
                     jlbSelCols, sldCols,
-                    jlbSelDif, sldDifficulty
+                    jlbSelDif, sldDif
             };
             int choice = JOptionPane.showOptionDialog(null, inputs, strings.getString("titleChangeMode"),
                     JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[]{strings.getString("optionYes"),
                             strings.getString("optionNo")}, strings.getString("optionYes"));
+
+            sldRows.removeChangeListener(clRows);
+            sldCols.removeChangeListener(clCols);
+            sldDif.removeChangeListener(clDif);
+
             if (choice == JOptionPane.NO_OPTION) return;
-            restartGame(sldRows.getValue(), sldCols.getValue(), sldDifficulty.getValue());
+            restartGame(sldRows.getValue(), sldCols.getValue(), sldDif.getValue());
         }
         @Override
         public void mousePressed(MouseEvent e) {}
@@ -353,7 +367,7 @@ public class MineFrame extends JFrame implements GameActable {
         }
     }
 
-    private static class CellButton extends JButton{
+    private static class CellButton extends JButton {
         CellButton(){
             setFocusPainted(false);
             setMargin(new Insets(0, 0, 0, 0));
