@@ -55,7 +55,7 @@ public enum EdgeFactorySelector {
     EdgeFactorySelector(EdgeFactory fact){
         try {
             setEdgeAttributes(fact);
-        } catch (AnnotationNotPresentException | IOException | MissingResourceException e) {
+        } catch (AnnotationNotPresentException | IOException | MissingResourceException | IllegalArgumentException e) {
             e.printStackTrace();
             System.exit(1);
         }
@@ -70,7 +70,9 @@ public enum EdgeFactorySelector {
      * Method checking and setting attributes of the current edge type. Invoked by the enum constructor.
      * @param fact factory object to checked
      * @throws AnnotationNotPresentException if fact's class doesn't have a FactoryInfo annotation
-     * @throws IOException if iconPath() parameter in FactoryInfo annotation applied to fact's class is incorrect
+     * @throws IOException if an IO exception occured while reading image specified by an iconPath() parameter in
+     * FactoryInfo annotation applied to fact's class is incorrect
+     * @throws IllegalArgumentException if image file is not present
      * @throws MissingResourceException if string resource bundle doesn't contain hintResourceBundleKey() or
      * descriptionResourceBundleKey() keys defined by FactoryInfo annotation applied to fact's class
      */

@@ -8,7 +8,7 @@ import com.egrasoft.graphalgo.tools.InfoPack;
 /**
  * Factory for normal node objects, implementation of node abstract factory.
  */
-@FactoryInfo(iconPath = "/com/egrasoft/graphalgo/graphics/normalNodeIcon.png",
+@FactoryInfo(iconPath = "/com/egrasoft/graphalgo/graphics/NormalNodeIcon.png",
         hintResourceBundleKey = "toolboxHintNormalNode",
         descriptionResourceBundleKey = "toolboxDescriptionNormalNode")
 public class NormalNodeFactory extends NodeFactory {

@@ -56,7 +56,7 @@ public enum NodeFactorySelector {
     NodeFactorySelector(NodeFactory fact){
         try {
             setNodeAttributes(fact);
-        } catch (AnnotationNotPresentException | IOException | MissingResourceException e) {
+        } catch (AnnotationNotPresentException | IOException | MissingResourceException | IllegalArgumentException e) {
             e.printStackTrace();
             System.exit(1);
         }
@@ -68,11 +68,12 @@ public enum NodeFactorySelector {
 
 
     /**
-     * Method checking and setting attributes of the current node type. Invoked by the enum constructor.
+     * Method checking and setting the attributes of the current node type. Invoked by the enum constructor.
      * @param fact factory object to checked
      * @throws AnnotationNotPresentException if fact's class doesn't have a FactoryInfo annotation
-     * @throws IOException if an exception occured while reading image specified by an iconPath() parameter in
+     * @throws IOException if an IO exception occured while reading image specified by an iconPath() parameter in
      * FactoryInfo annotation applied to fact's class is incorrect
+     * @throws IllegalArgumentException if image file is not present
      * @throws MissingResourceException if string resource bundle doesn't contain hintResourceBundleKey() or
      * descriptionResourceBundleKey() keys defined by FactoryInfo annotation applied to fact's class
      */
@@ -82,7 +83,6 @@ public enum NodeFactorySelector {
             throw new AnnotationNotPresentException("Cannot find a FactoryInfo annotation on "+fClass.getName()+" class");
         FactoryInfo anno = fClass.getAnnotation(FactoryInfo.class);
         ResourceBundle res = MainFrame.getResourceBundle();
-        if (getClass().getResource())
         img = ImageIO.read(getClass().getResource(anno.iconPath()));
         if (!res.containsKey(anno.hintResourceBundleKey()))
             throw new MissingResourceException("Hint string resource key of "+fClass.getName()+" class was not found", "ResourceBundle", anno.hintResourceBundleKey());

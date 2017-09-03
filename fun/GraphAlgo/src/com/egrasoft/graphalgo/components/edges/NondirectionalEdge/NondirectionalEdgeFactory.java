@@ -8,7 +8,7 @@ import com.egrasoft.graphalgo.components.edges.EdgeFactory;
 /**
  * Factory for nondirectional edge objects, implementation of the edge abstract factory.
  */
-@FactoryInfo(iconPath = "/com/egrasoft/graphalgo/graphics/nondirectionalEdgeIcon.png",
+@FactoryInfo(iconPath = "/com/egrasoft/graphalgo/graphics/NondirectionalEdgeIcon.png",
         hintResourceBundleKey = "toolboxHintNondirectionalEdge",
         descriptionResourceBundleKey = "toolboxDescriptionNondirectionalEdge")
 public class NondirectionalEdgeFactory extends EdgeFactory {
