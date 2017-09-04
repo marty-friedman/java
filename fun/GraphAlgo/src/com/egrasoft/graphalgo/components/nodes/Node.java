@@ -26,11 +26,6 @@ public abstract class Node extends GraphComponent{
     ArrayList<Edge> edges = new ArrayList<>();
 
     /**
-     * Safe iterator for adjacent edges collection
-     */
-    private SafeCollectionWrapper<Edge> edgesIter = new SafeCollectionWrapper<>(edges);
-
-    /**
      * Link to the GUI node representation.
      */
     protected NodeUI ui;
@@ -67,7 +62,7 @@ public abstract class Node extends GraphComponent{
      * Resets and returns safe iterator for the adjacent edges collection.
      * @return copy of edges array
      */
-    public SafeCollectionWrapper<Edge> getAdjacentEdges() { return edgesIter; }
+    public List<Edge> getAdjacentEdges() { return Collections.unmodifiableList(edges); }
 
     /**
      * Returns number of this node.
