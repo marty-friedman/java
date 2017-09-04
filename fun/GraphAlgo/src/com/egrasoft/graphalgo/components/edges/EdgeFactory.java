@@ -1,23 +1,29 @@
 package com.egrasoft.graphalgo.components.edges;
 
+import com.egrasoft.graphalgo.components.GraphComponentFactory;
 import com.egrasoft.graphalgo.tools.InfoPack;
 
 /**
- * Abstract factory for edge objects. All subclasses also being instantiated in edge selector
- * enum must apply a FactoryInfo annotation, otherwise a runtime exception will be thrown at
- * the very start of the application.
+ * Abstract factory class for graph edge components. All the component classes being instantiated in
+ * the subclasses of this factory also defined in the edge selector enumeration must have a FactoryInfo
+ * annotation applied, otherwise a runtime exception will be thrown at the very beginning of application.
  * @see EdgeFactorySelector
  */
-public abstract class EdgeFactory {
+public abstract class EdgeFactory extends GraphComponentFactory{
     /**
-     * Method instantiating a new edge object.
-     * @param data data pack with the properties of the new edge
-     * @return newly created edge object
+     * @see GraphComponentFactory#instance(InfoPack)
      */
-    public abstract Edge instanceEdge(InfoPack data);
+    @Override
+    public abstract Edge instance(InfoPack data);
 
     /**
-     * TODO
+     * @see GraphComponentFactory#getInfo()
      */
-    public abstract InfoPack getEdgeInfo();
+    @Override
+    public abstract InfoPack getInfo();
+
+    /**
+     * @see GraphComponentFactory#getComponentClass()
+     */
+    public abstract Class<?> getComponentClass();
 }

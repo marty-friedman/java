@@ -3,9 +3,9 @@ package com.egrasoft.graphalgo.components.nodes;
 import com.egrasoft.graphalgo.components.edges.Edge;
 import com.egrasoft.graphalgo.components.GraphComponent;
 import com.egrasoft.graphalgo.tools.InfoPack;
+import com.egrasoft.graphalgo.tools.SafeCollectionWrapper;
 
 import java.util.ArrayList;
-import java.util.ListIterator;
 
 /**
  * Abstract class representing physical node object.
@@ -24,6 +24,11 @@ public abstract class Node extends GraphComponent{
      * Array of adjacent for the current node edges.
      */
     ArrayList<Edge> edges = new ArrayList<>();
+
+    /**
+     * Safe iterator for adjacent edges collection
+     */
+    private SafeCollectionWrapper<Edge> edgesIter = new SafeCollectionWrapper<>(edges);
 
     /**
      * Link to the GUI node representation.
@@ -59,10 +64,10 @@ public abstract class Node extends GraphComponent{
     public void removeAdjacentEdge(Edge e) { edges.remove(e); }
 
     /**
-     * Returns the copy of the adjacent edges array.
+     * Resets and returns safe iterator for the adjacent edges collection.
      * @return copy of edges array
      */
-    public ArrayList<Edge> getEdgesCopy() { return new ArrayList<>(edges); }
+    public SafeCollectionWrapper<Edge> getAdjacentEdges() { return edgesIter; }
 
     /**
      * Returns number of this node.

@@ -1,6 +1,5 @@
 package com.egrasoft.graphalgo.components.nodes.NormalNode;
 
-import com.egrasoft.graphalgo.FactoryInfo;
 import com.egrasoft.graphalgo.components.nodes.Node;
 import com.egrasoft.graphalgo.components.nodes.NodeFactory;
 import com.egrasoft.graphalgo.tools.InfoPack;
@@ -8,15 +7,12 @@ import com.egrasoft.graphalgo.tools.InfoPack;
 /**
  * Factory for normal node objects, implementation of node abstract factory.
  */
-@FactoryInfo(iconPath = "/com/egrasoft/graphalgo/graphics/NormalNodeIcon.png",
-        hintResourceBundleKey = "toolboxHintNormalNode",
-        descriptionResourceBundleKey = "toolboxDescriptionNormalNode")
 public class NormalNodeFactory extends NodeFactory {
     /**
-     * @see NodeFactory#instanceNode(InfoPack)
+     * @see NodeFactory#instance(InfoPack)
      */
     @Override
-    public Node instanceNode(InfoPack data) {
+    public Node instance(InfoPack data) {
         return new NormalNode(data);
     }
 
@@ -24,5 +20,11 @@ public class NormalNodeFactory extends NodeFactory {
      * TODO
      */
     @Override
-    public InfoPack getNodeInfo() { return new InfoPack(); }
+    public InfoPack getInfo() { return new InfoPack(); }
+
+    /**
+     * @see NodeFactory#getComponentClass()
+     */
+    @Override
+    public Class<?> getComponentClass() { return NormalNode.class; }
 }

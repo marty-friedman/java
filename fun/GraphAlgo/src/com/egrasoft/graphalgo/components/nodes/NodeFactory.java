@@ -1,25 +1,29 @@
 package com.egrasoft.graphalgo.components.nodes;
 
+import com.egrasoft.graphalgo.components.GraphComponentFactory;
 import com.egrasoft.graphalgo.tools.InfoPack;
 
 /**
- * Abstract factory class for graph node components. All subclasses also being instantiated in node
- * selector enum must have a FactoryInfo annotation, otherwise a runtime exception will be thrown at
- * the very start of the application.
+ * Abstract factory class for graph node components. All the component classes being instantiated in
+ * the subclasses of this factory also defined in the node selector enumeration must have a FactoryInfo
+ * annotation applied, otherwise a runtime exception will be thrown at the very beginning of application.
  * @see NodeFactorySelector
  */
-public abstract class NodeFactory {
+public abstract class NodeFactory extends GraphComponentFactory {
+    /**
+     * @see GraphComponentFactory#instance(InfoPack)
+     */
+    @Override
+    public abstract Node instance(InfoPack data);
 
     /**
-     * Method instantiating a new node object.
-     * @param data data pack with properties of new node
-     * @return newly created node object
+     * @see GraphComponentFactory#getInfo()
      */
-    public abstract Node instanceNode(InfoPack data);
+    @Override
+    public abstract InfoPack getInfo();
 
     /**
-     * TODO
+     * @see GraphComponentFactory#getComponentClass()
      */
-    public abstract InfoPack getNodeInfo();
-
+    public abstract Class<?> getComponentClass();
 }

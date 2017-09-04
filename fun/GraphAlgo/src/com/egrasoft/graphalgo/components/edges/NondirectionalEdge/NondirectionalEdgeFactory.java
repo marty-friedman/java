@@ -1,6 +1,5 @@
 package com.egrasoft.graphalgo.components.edges.NondirectionalEdge;
 
-import com.egrasoft.graphalgo.FactoryInfo;
 import com.egrasoft.graphalgo.tools.InfoPack;
 import com.egrasoft.graphalgo.components.edges.Edge;
 import com.egrasoft.graphalgo.components.edges.EdgeFactory;
@@ -8,15 +7,12 @@ import com.egrasoft.graphalgo.components.edges.EdgeFactory;
 /**
  * Factory for nondirectional edge objects, implementation of the edge abstract factory.
  */
-@FactoryInfo(iconPath = "/com/egrasoft/graphalgo/graphics/NondirectionalEdgeIcon.png",
-        hintResourceBundleKey = "toolboxHintNondirectionalEdge",
-        descriptionResourceBundleKey = "toolboxDescriptionNondirectionalEdge")
 public class NondirectionalEdgeFactory extends EdgeFactory {
     /**
-     * @see EdgeFactory#instanceEdge(InfoPack)
+     * @see EdgeFactory#instance(InfoPack)
      */
     @Override
-    public Edge instanceEdge(InfoPack data) {
+    public Edge instance(InfoPack data) {
         return new NondirectionalEdge(data);
     }
 
@@ -24,5 +20,11 @@ public class NondirectionalEdgeFactory extends EdgeFactory {
      * TODO
      */
     @Override
-    public InfoPack getEdgeInfo() { return new InfoPack(); }
+    public InfoPack getInfo() { return new InfoPack(); }
+
+    /**
+     * @see EdgeFactory#getComponentClass()
+     */
+    @Override
+    public Class<?> getComponentClass() { return NondirectionalEdge.class; }
 }

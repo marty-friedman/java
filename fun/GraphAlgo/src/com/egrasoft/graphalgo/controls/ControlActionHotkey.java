@@ -1,6 +1,7 @@
 package com.egrasoft.graphalgo.controls;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static com.egrasoft.graphalgo.controls.ControlActionHotkey.Constants.*;
 
@@ -43,7 +44,7 @@ public class ControlActionHotkey {
     /**
      * Predicate analyzing given integer mask in comparison to this object's mask value.
      */
-    private Function<Integer, Boolean> predicate;
+    private Predicate<Integer> predicate;
 
 
     /*=======================Constructors=======================*/
@@ -98,7 +99,7 @@ public class ControlActionHotkey {
      * Creates a predicate object comparing this hotkey's mask to the given one.
      * @return predicate, obtaining an integer mask value and returning boolean value (true if the given hotkey mask fits this one, false otherwise)
      */
-    private Function<Integer, Boolean> getPredicate(){
+    private Predicate<Integer> getPredicate(){
         return (Integer ex)->{
             int req = mask;
             int equalMask = TestConstants.TEST_EVENT | TestConstants.TEST_CODE | TestConstants.TEST_SHIFT | TestConstants.TEST_CTRL;
@@ -135,7 +136,7 @@ public class ControlActionHotkey {
      * @param event mask value to be checked
      * @return boolean value (true if it's the same, false otherwise)
      */
-    public boolean check(int event){ return predicate.apply(event); }
+    public boolean check(int event){ return predicate.test(event); }
 
 
     /*======================Nested Classes======================*/

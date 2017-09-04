@@ -14,6 +14,11 @@ import java.util.TreeSet;
  * as well.
  */
 public class InfoPack {
+
+
+    /*==========================Fields==========================*/
+
+
     /**
      * HashMap object storage.
      */
@@ -32,6 +37,10 @@ public class InfoPack {
         data = new HashMap<>();
         keys = new TreeSet<>(Arrays.asList("nodeCoords", "fromNode", "toNode", "nodeNumber"));
     }
+
+
+    /*======================Public Methods======================*/
+
 
     /**
      * Put-method for data storage.
@@ -77,4 +86,6 @@ public class InfoPack {
             throw new IllegalArgumentException(unknownkey);
         return data.get(key);
     }
+
+
 }

@@ -1,7 +1,9 @@
 package com.egrasoft.graphalgo;
 
+import com.egrasoft.graphalgo.components.GraphComponentFactorySelector;
 import com.egrasoft.graphalgo.components.GraphComponentUI;
 import com.egrasoft.graphalgo.components.edges.Edge;
+import com.egrasoft.graphalgo.components.edges.EdgeFactorySelector;
 import com.egrasoft.graphalgo.components.edges.EdgeUI;
 import com.egrasoft.graphalgo.components.nodes.Node;
 import com.egrasoft.graphalgo.components.nodes.NodeFactorySelector;
@@ -10,6 +12,7 @@ import com.egrasoft.graphalgo.listeners.ClickAdapter;
 import com.egrasoft.graphalgo.listeners.DragAdapter;
 import com.egrasoft.graphalgo.listeners.TypeAdapter;
 import com.egrasoft.graphalgo.tools.InfoPack;
+import com.egrasoft.graphalgo.tools.SafeCollectionWrapper;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,11 +20,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
-import static com.egrasoft.graphalgo.components.edges.EdgeFactorySelector.*;
-import static com.egrasoft.graphalgo.components.nodes.NodeFactorySelector.*;
 import static com.egrasoft.graphalgo.controls.ControlAction.*;
 import static com.egrasoft.graphalgo.controls.ControlActionHotkey.Constants.*;
 
@@ -42,7 +43,7 @@ public class MainFrame extends JFrame{
     /**
      * Panel object handling a GUI graph representation.
      */
-    private GraphPanel gpanel;
+    private GraphPanel gpanel = new GraphPanel();
 
     /**
      * Object handling a physical graph representation.
@@ -68,11 +69,6 @@ public class MainFrame extends JFrame{
      * Color of the bottom control panel.
      */
     private Color bottomPanelColor = new Color(221, 221, 221);
-
-    /**
-     * Toolbox width.
-     */
-    private int toolboxPanelWidth = 50;
 
 
     /*=======================Constructors=======================*/
@@ -108,18 +104,13 @@ public class MainFrame extends JFrame{
 
         JPanel mainPanel = new JPanel(new BorderLayout());
 
-        gpanel = new GraphPanel();
-
-        //======tmp======
-        graph.setFactories(NORMAL_NODE, NONDIRECTIONAL_EDGE);
-        //======tmp======
-
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.LINE_AXIS));
         bottomPanel.setBackground(bottomPanelColor);
         bottomPanel.setPreferredSize(new Dimension(0, bottomPanelHeight));
 
         mainPanel.add(gpanel, BorderLayout.CENTER);
+        mainPanel.add(toolbox, BorderLayout.EAST);
         mainPanel.add(bottomPanel, BorderLayout.SOUTH);
         add(mainPanel);
     }
@@ -145,6 +136,10 @@ public class MainFrame extends JFrame{
      * event handling.
      */
     private class GraphPanel extends JPanel{
+
+
+        /*==========================Fields==========================*/
+
 
         /**
          * Graph component GUI representation being selected at the moment
@@ -172,135 +167,6 @@ public class MainFrame extends JFrame{
          * Color of the line connecting two nodes.
          */
         private Color connectColor = new Color(0,0,0);
-
-
-        /**
-         * Class constructor.
-         */
-        GraphPanel(){
-            addMouseListener(mouseAdapter);
-            addMouseListener(dragAdapter);
-            addMouseMotionListener(dragAdapter);
-            MainFrame.this.addKeyListener(keyAdapter);
-            setBackground(fieldEditColor);
-        }
-
-
-        /**
-         * Used to check if mouse event on particular point had caught any
-         * graph component. Returns {@link GraphComponentUI} object if it's so.
-         * Uses square of a 2*searchingSize size to detect an intersection with
-         * any item.
-         * @param coords mouse event location
-         * @return component targeted with mouse event (or null)
-         */
-        private GraphComponentUI getElementByCoords(Point coords){
-            Rectangle rect = new Rectangle(coords.x-searchingSize, coords.y-searchingSize, 2*searchingSize, 2*searchingSize);
-            ArrayList<Node> nodes = graph.getNodes();
-            ArrayList<Edge> edges = graph.getEdges();
-            for (Node node : nodes) {
-                NodeUI ui = node.getUI();
-                if (ui.intersects(rect))
-                    return ui;
-            }
-            for (Edge edge : edges){
-                EdgeUI ui = edge.getUI();
-                if (ui.intersects(rect))
-                    return ui;
-            }
-            return null;
-        }
-
-        /**
-         * Used to select {@link GraphComponentUI} object.
-         * @param element item to be selected
-         */
-        private void setSelection(GraphComponentUI element){
-            selected = element;
-            repaint();
-        }
-
-        /**
-         * Must be used to create a {@link Node} object. Packs node's location
-         * into {@link InfoPack} object and invokes {@link Graph#addNode(InfoPack)}
-         * method. Returns node's GUI representation.
-         * @param coords new node's location
-         * @return GUI representation of currently created node
-         */
-        private NodeUI makeNode(Point coords){
-            InfoPack data = graph.getNodeInfo();
-            data.put("nodeCoords", coords);
-            Node n = graph.addNode(data);
-            repaint();
-            return n.getUI();
-        }
-
-        /**
-         * Must be used to connect 2 node objects and make an {@link Edge} object.
-         * Packs start and end {@link Node} objects into {@link InfoPack} object
-         * and invokes {@link Graph#addEdge(InfoPack)} method. Returns new edge's
-         * GUI representation.
-         * @param from GUI representation of node, which should be the start node
-         * @param to GUI representation of node, which should be the end node
-         * @return GUI representation of newly created edge
-         */
-        private EdgeUI makeEdge(NodeUI from, NodeUI to){
-            InfoPack data = graph.getEdgeInfo();
-            data.put("fromNode", from.getEntity());
-            data.put("toNode", to.getEntity());
-            Edge e = graph.addEdge(data);
-            repaint();
-            return e.getUI();
-        }
-
-        /**
-         * Must be used to delete selected graph component and its GUI representation.
-         */
-        private void deleteSelectedComponent(){
-            graph.removeGraphComponent(selected.getEntity());
-            selected = null;
-            repaint();
-        }
-
-        /**
-         * Method inherited from {@link JComponent} and invoked every time frame
-         * repaints. Every node and edge from nodes and edges collections respectively
-         * is drawn here. Method also displays connection line between nodes currently
-         * being connected and graph component selection. Invokes {@link NodeUI#draw(Graphics2D)},
-         * {@link EdgeUI#draw(Graphics2D)}, {@link NodeUI#select(Graphics2D)} and
-         * {@link EdgeUI#select(Graphics2D)} methods.
-         * @param gr graphics object
-         */
-        @Override
-        public void paintComponent(Graphics gr){
-            super.paintComponent(gr);
-            Graphics2D g = (Graphics2D) gr;
-
-            ArrayList<Node> nodes = graph.getNodes();
-            ArrayList<Edge> edges = graph.getEdges();
-
-            //Edges
-            for (Edge e : edges)
-                e.getUI().draw(g);
-            //SelectedEdge
-            if (selected!=null && selected instanceof EdgeUI)
-                selected.select(g);
-
-            //Connecting
-            g.setStroke(connectStroke);
-            g.setColor(connectColor);
-            if (dragAdapter.actionPerforming == DragAdapter.DragAction.CONNECTING)
-                g.drawLine(dragAdapter.startDrag.x, dragAdapter.startDrag.y, dragAdapter.endDrag.x, dragAdapter.endDrag.y);
-
-            //Nodes
-            for (Node n : nodes)
-                n.getUI().draw(g);
-            //SelectedNode
-            if (selected!=null && selected instanceof NodeUI)
-                selected.select(g);
-
-        }
-
 
         /**
          * Object, used to handle key events. Overrides {@link KeyAdapter#keyPressed(KeyEvent)} method.
@@ -430,19 +296,271 @@ public class MainFrame extends JFrame{
             }
         };
 
+
+        /*=======================Constructors=======================*/
+
+
+        /**
+         * Class constructor.
+         */
+        GraphPanel(){
+            addMouseListener(mouseAdapter);
+            addMouseListener(dragAdapter);
+            addMouseMotionListener(dragAdapter);
+            addKeyListener(keyAdapter);
+            setBackground(fieldEditColor);
+        }
+
+
+        /*======================Private Methods======================*/
+
+
+        /**
+         * Used to check if mouse event on particular point had caught any
+         * graph component. Returns {@link GraphComponentUI} object if it's so.
+         * Uses square of a 2*searchingSize size to detect an intersection with
+         * any item.
+         * @param coords mouse event location
+         * @return component targeted with mouse event (or null)
+         */
+        private GraphComponentUI getElementByCoords(Point coords){
+            Rectangle rect = new Rectangle(coords.x-searchingSize, coords.y-searchingSize, 2*searchingSize, 2*searchingSize);
+
+            SafeCollectionWrapper<Node> nodes = graph.getNodes();
+            for (Node n : nodes){
+                NodeUI ui = n.getUI();
+                if (ui.intersects(rect))
+                    return ui;
+            }
+
+            SafeCollectionWrapper<Edge> edges = graph.getEdges();
+            for (Edge e : edges){
+                EdgeUI ui = e.getUI();
+                if (ui.intersects(rect))
+                    return ui;
+            }
+            return null;
+        }
+
+        /**
+         * Used to select {@link GraphComponentUI} object.
+         * @param element item to be selected
+         */
+        private void setSelection(GraphComponentUI element){
+            selected = element;
+            repaint();
+        }
+
+        /**
+         * Must be used to create a {@link Node} object. Packs node's location
+         * into {@link InfoPack} object and invokes {@link Graph#addNode(InfoPack)}
+         * method. Returns node's GUI representation.
+         * @param coords new node's location
+         * @return GUI representation of currently created node
+         */
+        private NodeUI makeNode(Point coords){
+            InfoPack data = graph.getNodeInfo();
+            data.put("nodeCoords", coords);
+            Node n = graph.addNode(data);
+            repaint();
+            return n.getUI();
+        }
+
+        /**
+         * Must be used to connect 2 node objects and make an {@link Edge} object.
+         * Packs start and end {@link Node} objects into {@link InfoPack} object
+         * and invokes {@link Graph#addEdge(InfoPack)} method. Returns new edge's
+         * GUI representation.
+         * @param from GUI representation of node, which should be the start node
+         * @param to GUI representation of node, which should be the end node
+         * @return GUI representation of newly created edge
+         */
+        private EdgeUI makeEdge(NodeUI from, NodeUI to){
+            InfoPack data = graph.getEdgeInfo();
+            data.put("fromNode", from.getEntity());
+            data.put("toNode", to.getEntity());
+            Edge e = graph.addEdge(data);
+            repaint();
+            return e.getUI();
+        }
+
+        /**
+         * Must be used to delete selected graph component and its GUI representation.
+         */
+        private void deleteSelectedComponent(){
+            graph.removeGraphComponent(selected.getEntity());
+            selected = null;
+            repaint();
+        }
+
+
+        /*=====================Inherited Methods=====================*/
+
+
+        /**
+         * Method inherited from {@link JComponent} and invoked every time frame
+         * repaints. Every node and edge from nodes and edges collections respectively
+         * is drawn here. Method also displays connection line between nodes currently
+         * being connected and graph component selection. Invokes {@link NodeUI#draw(Graphics2D)},
+         * {@link EdgeUI#draw(Graphics2D)}, {@link NodeUI#select(Graphics2D)} and
+         * {@link EdgeUI#select(Graphics2D)} methods.
+         * @param gr graphics object
+         */
+        @Override
+        public void paintComponent(Graphics gr){
+            super.paintComponent(gr);
+            Graphics2D g = (Graphics2D) gr;
+
+            SafeCollectionWrapper<Node> nodes = graph.getNodes();
+            SafeCollectionWrapper<Edge> edges = graph.getEdges();
+
+            //Edges
+            for (Edge e : edges)
+                e.getUI().draw(g);
+            //SelectedEdge
+            if (selected!=null && selected instanceof EdgeUI)
+                selected.select(g);
+
+            //Connecting
+            g.setStroke(connectStroke);
+            g.setColor(connectColor);
+            if (dragAdapter.actionPerforming == DragAdapter.DragAction.CONNECTING)
+                g.drawLine(dragAdapter.startDrag.x, dragAdapter.startDrag.y, dragAdapter.endDrag.x, dragAdapter.endDrag.y);
+
+            //Nodes
+            for (Node n : nodes)
+                n.getUI().draw(g);
+            //SelectedNode
+            if (selected!=null && selected instanceof NodeUI)
+                selected.select(g);
+
+            setFocusable(true);
+            requestFocusInWindow();
+        }
+
+
     }
 
-    public static class GraphToolbox extends JPanel{
+    private class GraphToolbox extends JPanel{
+
+
+        /*==========================Fields==========================*/
+
+
         /**
          * Size of the toolbox button.
          */
-        private static Dimension buttonSize = new Dimension(20, 20);
+        private Dimension buttonSize = new Dimension(25, 25);
 
         /**
-         * Getter-method for the buttonSize field.
-         * @return size of the button dimension
+         * Size of the toolbox button icon.
          */
-        public static Dimension getButtonSize() { return buttonSize; }
+        private Dimension buttonIconSize = new Dimension(18, 18);
+
+        /**
+         * Toolbox width.
+         */
+        private int toolboxPanelWidth = 70;
+
+        /**
+         * Color of the bottom control panel.
+         */
+        private Color toolboxPanelColor = new Color(225, 225, 250);
+
+        /**
+         * List of node selector buttons.
+         */
+        private ButtonGroup nodes = new ButtonGroup();
+
+        /**
+         * List of edge selector buttons.
+         */
+        private ButtonGroup edges = new ButtonGroup();
+
+        /**
+         * Toolbox button margin.
+         */
+        private int toolboxButtonMargin = 5;
+
+
+        /*=======================Constructors=======================*/
+
+
+        GraphToolbox(){
+            setPreferredSize(new Dimension(toolboxPanelWidth, 0));
+            setBackground(toolboxPanelColor);
+            setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+            setAlignmentY(TOP_ALIGNMENT);
+
+            JPanel nodesPanel = new JPanel();
+            nodesPanel.setLayout(new BoxLayout(nodesPanel, BoxLayout.PAGE_AXIS));
+            nodesPanel.setBackground(toolboxPanelColor);
+            ButtonGroup nodes = new ButtonGroup();
+            Consumer<GraphComponentFactorySelector> nodeFunc = graph::setNodeFactory;
+            fillButtonColumn(nodesPanel, nodes, nodeFunc, NodeFactorySelector.values());
+
+            JPanel edgesPanel = new JPanel();
+            edgesPanel.setLayout(new BoxLayout(edgesPanel, BoxLayout.PAGE_AXIS));
+            edgesPanel.setBackground(toolboxPanelColor);
+            ButtonGroup edges = new ButtonGroup();
+            Consumer<GraphComponentFactorySelector> edgeFunc = graph::setEdgeFactory;
+            fillButtonColumn(edgesPanel, edges, edgeFunc, EdgeFactorySelector.values());
+
+            add(Box.createHorizontalGlue());
+            add(nodesPanel);
+            add(Box.createHorizontalGlue());
+            add(edgesPanel);
+            add(Box.createHorizontalGlue());
+        }
+
+
+        /*======================Private Methods======================*/
+
+
+        private void fillButtonColumn(JPanel panel, ButtonGroup group, Consumer<GraphComponentFactorySelector> func, GraphComponentFactorySelector[] selectors){
+            panel.add(Box.createRigidArea(new Dimension(0, toolboxButtonMargin)));
+            boolean first = true;
+            for (GraphComponentFactorySelector fs : selectors){
+                JToggleButton butt = new JToggleButton();
+                butt.setIcon(new ImageIcon(fs.getImg().getScaledInstance(buttonIconSize.width, buttonIconSize.height, Image.SCALE_SMOOTH)));
+                butt.setPreferredSize(buttonSize);
+                butt.setFocusPainted(false);
+                butt.setToolTipText(fs.getHint() + strings.getString("hintToDescription"));
+                butt.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mousePressed(MouseEvent e) {
+                        if (SwingUtilities.isLeftMouseButton(e))
+                            func.accept(fs);
+                    }
+
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        if (SwingUtilities.isRightMouseButton(e)) {
+                            butt.setToolTipText(fs.getDescription());
+                            MouseEvent phantom = new MouseEvent(butt, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), 0,
+                                    e.getX(), e.getY(), 0, false);
+                            ToolTipManager.sharedInstance().mouseMoved(phantom);
+                        }
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        butt.setToolTipText(fs.getHint() + strings.getString("hintToDescription"));
+                    }
+                });
+                group.add(butt);
+                panel.add(butt);
+                panel.add(Box.createRigidArea(new Dimension(0, toolboxButtonMargin)));
+                if (first) {
+                    butt.setSelected(true);
+                    func.accept(fs);
+                    first = false;
+                }
+            }
+            panel.add(Box.createVerticalGlue());
+        }
+
+
     }
 
 
