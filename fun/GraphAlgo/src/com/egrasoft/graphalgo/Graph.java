@@ -29,19 +29,9 @@ public class Graph {
     private ArrayList<Node> nodes = new ArrayList<>();
 
     /**
-     * Safe iterator for node collection
-     */
-    private SafeCollectionWrapper<Node> nodesIter = new SafeCollectionWrapper<>(nodes);
-
-    /**
      * Edge elements container.
      */
     private ArrayList<Edge> edges = new ArrayList<>();
-
-    /**
-     * Safe iterator for edge collection
-     */
-    private SafeCollectionWrapper<Edge> edgesIter = new SafeCollectionWrapper<>(edges);
 
     /**
      * Node abstract factory.
@@ -95,7 +85,7 @@ public class Graph {
             edges.remove(e);
         } else if (elem instanceof Node){
             Node n = (Node) elem;
-            SafeCollectionWrapper<Edge> adjEdges = n.getAdjacentEdges();
+            List<Edge> adjEdges = n.getAdjacentEdges();
             for (Edge e : adjEdges)
                 removeGraphComponent(e);
             int i=0;
@@ -127,13 +117,13 @@ public class Graph {
      * Resets and returns safe iterator for the nodes collection.
      * @return collection of node objects
      */
-    public SafeCollectionWrapper<Node> getNodes() { return nodesIter; }
+    public List<Node> getNodes() { return Collections.unmodifiableList(nodes); }
 
     /**
      * Resets and returns safe iterator for the edges collection.
      * @return collection of edge objects
      */
-    public SafeCollectionWrapper<Edge> getEdges() { return edgesIter; }
+    public List<Edge> getEdges() { return Collections.unmodifiableList(edges); }
 
     /**
      * Method invoking a {@link NodeFactory#getInfo()} method to find out some
