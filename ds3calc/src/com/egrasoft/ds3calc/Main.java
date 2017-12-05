@@ -6,12 +6,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.util.ResourceBundle;
+
 public class Main extends Application {
+
+    public static final ResourceBundle strings = ResourceBundle.getBundle("com.egrasoft.ds3calc.strings");
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("main.fxml"));
-        primaryStage.setTitle("Калькулятор брони Dark Souls III");
+        Parent root = FXMLLoader.load(getClass().getResource("main.fxml"), strings);
+        primaryStage.setTitle(strings.getString("title"));
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }

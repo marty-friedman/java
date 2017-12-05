@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
-import static com.egrasoft.ds3calc.model.ArmorItemCharacteristic.*;
+import static com.egrasoft.ds3calc.model.ArmorItemStat.*;
 
 public class ArmorItem implements Serializable {
     private String name;
@@ -33,7 +33,7 @@ public class ArmorItem implements Serializable {
     private int durability;
     private double weight;
 
-    private ArmorItem(String name, String url, ArmorSlot type, Map<ArmorItemCharacteristic, Number> vals){
+    private ArmorItem(String name, String url, ArmorSlot type, Map<ArmorItemStat, Number> vals){
         this.name = name;
         this.type = type;
         this.url = url;
@@ -59,9 +59,9 @@ public class ArmorItem implements Serializable {
         ArmorSlot type = ArmorSlot.of(doc.select("aside.portable-infobox div.pi-item.pi-data.pi-item-spacing.pi-border-color h3+div").get(1).selectFirst("a").html().trim());
         String name = doc.select("aside.portable-infobox h2").get(0).html();
         Elements trs = doc.select("section.pi-item.pi-group.pi-border-color table[style=\"width:100%; text-align:center;\"] td:not(:has(a)):matches(.+)");
-        ArmorItemCharacteristic[] keys = {PHYS_RES, POISE, STRIKE_DEF, BLEED_RES, SLASH_DEF, POISON_RES, THRUST_DEF,
+        ArmorItemStat[] keys = {PHYS_RES, POISE, STRIKE_DEF, BLEED_RES, SLASH_DEF, POISON_RES, THRUST_DEF,
                 FROST_RES, MAGIC_DEF, CURSE_RES, FIRE_DEF, LIGHTNING_DEF, DURABILITY, DARK_DEF, WEIGHT};
-        Map<ArmorItemCharacteristic, Number> vals = new TreeMap<>();
+        Map<ArmorItemStat, Number> vals = new TreeMap<>();
         for(int i=0; i<keys.length; i++){
             Number num = (keys[i].getResClass().equals(Integer.class))? Integer.parseInt(trs.get(i).html()) : Double.parseDouble(trs.get(i).html());
             vals.put(keys[i], num);

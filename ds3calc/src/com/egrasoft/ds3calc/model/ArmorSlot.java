@@ -1,14 +1,19 @@
 package com.egrasoft.ds3calc.model;
 
+import com.egrasoft.ds3calc.Main;
 import javafx.scene.control.ListView;
-import javafx.scene.control.Tab;
 
 import java.io.Serializable;
+import java.util.ResourceBundle;
 
 public enum ArmorSlot implements Serializable {
     HELM, ARMOR, GAUNTLETS, LEGS;
 
-    private transient ListView<ArmorItem> list;
+    private String tabName;
+
+    ArmorSlot(){
+        this.tabName = Main.strings.getString("tabName_"+toString());
+    }
 
     public static ArmorSlot of(String type){
         switch(type){
@@ -25,11 +30,7 @@ public enum ArmorSlot implements Serializable {
         }
     }
 
-    public ListView<ArmorItem> getList() {
-        return list;
-    }
-
-    public void setList(ListView<ArmorItem> list) {
-        this.list = list;
+    public String getTabName() {
+        return tabName;
     }
 }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<fx:root type="FlowPane" xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         prefHeight="30.0" prefWidth="630.0"
+         style="-fx-hgap: 5; -fx-padding: 0 5;">
+
+    <ImageView fx:id="imageView" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true"/>
+    <Label fx:id="nameLabel" prefHeight="16" prefWidth="329"/>
+    <Label fx:id="fromLabel"/>
+    <TextField fx:id="fromTextField" prefHeight="26" prefWidth="57"/>
+    <Label fx:id="toLabel"/>
+    <TextField fx:id="toTextField" prefHeight="26" prefWidth="57"/>
+    <Label fx:id="weightLabel"/>
+    <TextField fx:id="weightTextField" prefHeight="26" prefWidth="57"/>
+
+</fx:root>

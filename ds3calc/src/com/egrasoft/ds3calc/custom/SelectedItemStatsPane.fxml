@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<fx:root type="FlowPane" xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml"
+         prefHeight="25.0" prefWidth="115.0"
+         style="-fx-hgap: 5;">
+    <ImageView fx:id="imageView" fitHeight="25.0" fitWidth="25.0" preserveRatio="true" pickOnBounds="true" />
+    <Label fx:id="label" prefHeight="16.0" prefWidth="83.0"/>
+
+</fx:root>
