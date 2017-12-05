@@ -1,0 +1,677 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<?import java.util.TreeMap?>
+
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.egrasoft.ds3calc.Controller">
+    <columnConstraints>
+        <ColumnConstraints />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints />
+    </rowConstraints>
+    <children>
+        <AnchorPane prefHeight="754.0" prefWidth="1309.0">
+            <children>
+                <TabPane fx:id="tabPane" prefHeight="331.0" prefWidth="1270.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <tabs>
+                        <Tab fx:id="helmTab" text="Шлемы" />
+                        <Tab fx:id="armorTab" text="Броня" />
+                        <Tab fx:id="gauntletsTab" text="Перчатки" />
+                        <Tab fx:id="legsTab" text="Сапоги" />
+                    </tabs>
+                </TabPane>
+                <FlowPane alignment="TOP_CENTER" layoutY="40.0" orientation="VERTICAL" prefHeight="292.0" prefWidth="1271.0" style="-fx-vgap: 5; -fx-hgap: 15; -fx-padding: 8;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                    <children>
+                        <FlowPane alignment="CENTER" prefHeight="30.0" prefWidth="630.0" style="-fx-hgap: 5; -fx-padding: 0 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/physRes.png" />
+                                    </image>
+                                </ImageView>
+                                <Label prefHeight="16.0" prefWidth="329.0" text="Физическая защита" />
+                                <Label text="от" />
+                                <TextField fx:id="physResFromTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="до" />
+                                <TextField fx:id="physResToTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="вес" />
+                                <TextField fx:id="physResWeightTextField" prefHeight="26.0" prefWidth="57.0" text="1.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane alignment="CENTER" prefHeight="30.0" prefWidth="630.0" style="-fx-hgap: 5; -fx-padding: 0 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/strikeDef.png" />
+                                    </image>
+                                </ImageView>
+                                <Label prefHeight="16.0" prefWidth="329.0" text="Поглощение урона от дробящего оружия" />
+                                <Label text="от" />
+                                <TextField fx:id="strikeDefFromTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="до" />
+                                <TextField fx:id="strikeDefToTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="вес" />
+                                <TextField fx:id="strikeDefWeightTextField" prefHeight="26.0" prefWidth="57.0" text="1.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane alignment="CENTER" prefHeight="30.0" prefWidth="630.0" style="-fx-hgap: 5; -fx-padding: 0 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/slashDef.png" />
+                                    </image>
+                                </ImageView>
+                                <Label prefHeight="16.0" prefWidth="329.0" text="Поглощение урона от рубящего оружия" />
+                                <Label text="от" />
+                                <TextField fx:id="slashDefFromTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="до" />
+                                <TextField fx:id="slashDefToTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="вес" />
+                                <TextField fx:id="slashDefWeightTextField" prefHeight="26.0" prefWidth="57.0" text="1.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane alignment="CENTER" prefHeight="30.0" prefWidth="630.0" style="-fx-hgap: 5; -fx-padding: 0 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/thrustDef.png" />
+                                    </image>
+                                </ImageView>
+                                <Label prefHeight="16.0" prefWidth="329.0" text="Поглощение урона от колющего оружия" />
+                                <Label text="от" />
+                                <TextField fx:id="thrustDefFromTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="до" />
+                                <TextField fx:id="thrustDefToTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="вес" />
+                                <TextField fx:id="thrustDefWeightTextField" prefHeight="26.0" prefWidth="57.0" text="1.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane alignment="CENTER" prefHeight="30.0" prefWidth="630.0" style="-fx-hgap: 5; -fx-padding: 0 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/magicDef.png" />
+                                    </image>
+                                </ImageView>
+                                <Label prefHeight="16.0" prefWidth="329.0" text="Защита от магии" />
+                                <Label text="от" />
+                                <TextField fx:id="magicDefFromTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="до" />
+                                <TextField fx:id="magicDefToTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="вес" />
+                                <TextField fx:id="magicDefWeightTextField" prefHeight="26.0" prefWidth="57.0" text="1.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane alignment="CENTER" prefHeight="30.0" prefWidth="630.0" style="-fx-hgap: 5; -fx-padding: 0 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/fireDef.png" />
+                                    </image>
+                                </ImageView>
+                                <Label prefHeight="16.0" prefWidth="329.0" text="Защита от огня" />
+                                <Label text="от" />
+                                <TextField fx:id="fireDefFromTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="до" />
+                                <TextField fx:id="fireDefToTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="вес" />
+                                <TextField fx:id="fireDefWeightTextField" prefHeight="26.0" prefWidth="57.0" text="1.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane alignment="CENTER" prefHeight="30.0" prefWidth="630.0" style="-fx-hgap: 5; -fx-padding: 0 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/lightningDef.png" />
+                                    </image>
+                                </ImageView>
+                                <Label prefHeight="16.0" prefWidth="329.0" text="Защита от молнии" />
+                                <Label text="от" />
+                                <TextField fx:id="lightningDefFromTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="до" />
+                                <TextField fx:id="lightningDefToTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="вес" />
+                                <TextField fx:id="lightningDefWeightTextField" prefHeight="26.0" prefWidth="57.0" text="1.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane alignment="CENTER" prefHeight="30.0" prefWidth="630.0" style="-fx-hgap: 5; -fx-padding: 0 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/darkDef.png" />
+                                    </image>
+                                </ImageView>
+                                <Label prefHeight="16.0" prefWidth="329.0" text="Защита от тьмы" />
+                                <Label text="от" />
+                                <TextField fx:id="darkDefFromTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="до" />
+                                <TextField fx:id="darkDefToTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="вес" />
+                                <TextField fx:id="darkDefWeightTextField" prefHeight="26.0" prefWidth="57.0" text="1.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane alignment="CENTER" prefHeight="30.0" prefWidth="630.0" style="-fx-hgap: 5; -fx-padding: 0 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/bleedRes.png" />
+                                    </image>
+                                </ImageView>
+                                <Label prefHeight="16.0" prefWidth="329.0" text="Сопротивление кровотечению" />
+                                <Label text="от" />
+                                <TextField fx:id="bleedResFromTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="до" />
+                                <TextField fx:id="bleedResToTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="вес" />
+                                <TextField fx:id="bleedResWeightTextField" prefHeight="26.0" prefWidth="57.0" text="1.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane alignment="CENTER" prefHeight="30.0" prefWidth="630.0" style="-fx-hgap: 5; -fx-padding: 0 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/poisonRes.png" />
+                                    </image>
+                                </ImageView>
+                                <Label prefHeight="16.0" prefWidth="329.0" text="Сопротивление отравлению" />
+                                <Label text="от" />
+                                <TextField fx:id="poisonResFromTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="до" />
+                                <TextField fx:id="poisonResToTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="вес" />
+                                <TextField fx:id="poisonResWeightTextField" prefHeight="26.0" prefWidth="57.0" text="1.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane alignment="CENTER" prefHeight="30.0" prefWidth="630.0" style="-fx-hgap: 5; -fx-padding: 0 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/frostRes.png" />
+                                    </image>
+                                </ImageView>
+                                <Label prefHeight="16.0" prefWidth="329.0" text="Сопротивление морозу" />
+                                <Label text="от" />
+                                <TextField fx:id="frostResFromTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="до" />
+                                <TextField fx:id="frostResToTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="вес" />
+                                <TextField fx:id="frostResWeightTextField" prefHeight="26.0" prefWidth="57.0" text="1.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane alignment="CENTER" prefHeight="30.0" prefWidth="630.0" style="-fx-hgap: 5; -fx-padding: 0 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/curseRes.png" />
+                                    </image>
+                                </ImageView>
+                                <Label prefHeight="16.0" prefWidth="329.0" text="Сопротивление проклятиям" />
+                                <Label text="от" />
+                                <TextField fx:id="curseResFromTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="до" />
+                                <TextField fx:id="curseResToTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="вес" />
+                                <TextField fx:id="curseResWeightTextField" prefHeight="26.0" prefWidth="57.0" text="1.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane alignment="CENTER" prefHeight="30.0" prefWidth="630.0" style="-fx-hgap: 5; -fx-padding: 0 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/poise.png" />
+                                    </image>
+                                </ImageView>
+                                <Label prefHeight="16.0" prefWidth="329.0" text="Баланс" />
+                                <Label text="от" />
+                                <TextField fx:id="poiseFromTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="до" />
+                                <TextField fx:id="poiseToTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="вес" />
+                                <TextField fx:id="poiseWeightTextField" prefHeight="26.0" prefWidth="57.0" text="1.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane alignment="CENTER" prefHeight="30.0" prefWidth="630.0" style="-fx-hgap: 5; -fx-padding: 0 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/durability.png" />
+                                    </image>
+                                </ImageView>
+                                <Label prefHeight="16.0" prefWidth="329.0" text="Прочность" />
+                                <Label text="от" />
+                                <TextField fx:id="durabilityFromTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="до" />
+                                <TextField fx:id="durabilityToTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="вес" />
+                                <TextField fx:id="durabilityWeightTextField" prefHeight="26.0" prefWidth="57.0" text="1.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane alignment="CENTER" prefHeight="30.0" prefWidth="630.0" style="-fx-hgap: 5; -fx-padding: 0 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/weight.png" />
+                                    </image>
+                                </ImageView>
+                                <Label prefHeight="16.0" prefWidth="329.0" text="Вес" />
+                                <Label text="от" />
+                                <TextField fx:id="weightFromTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="до" />
+                                <TextField fx:id="weightToTextField" prefHeight="26.0" prefWidth="57.0" text="NA" />
+                                <Label text="вес" />
+                                <TextField fx:id="weightWeightTextField" prefHeight="26.0" prefWidth="57.0" text="1.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="337.0" style="-fx-hgap: 5; -fx-padding: 0 7;">
+                            <children>
+                                <Button mnemonicParsing="false" onAction="#renewFiltersAndComparators" text="Обновить" />
+                            </children>
+                        </FlowPane>
+                    </children>
+                </FlowPane>
+                <FlowPane layoutX="11.0" layoutY="333.0" prefHeight="331.0" prefWidth="1031.0" style="-fx-padding: 10; -fx-hgap: 5;">
+                    <children>
+                        <ListView fx:id="helmListView" prefHeight="400.0" prefWidth="249.0" />
+                        <ListView fx:id="armorListView" prefHeight="400.0" prefWidth="249.0" />
+                        <ListView fx:id="gauntletsListView" prefHeight="400.0" prefWidth="249.0" />
+                        <ListView fx:id="legsListView" prefHeight="400.0" prefWidth="249.0" />
+                    </children>
+                </FlowPane>
+                <FlowPane layoutX="1042.0" layoutY="344.0" orientation="VERTICAL" prefHeight="259.0" prefWidth="255.0" style="-fx-padding: 10; -fx-hgap: 5; -fx-vgap: 5;">
+                    <children>
+                        <FlowPane prefHeight="25.0" prefWidth="115.0" style="-fx-hgap: 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/physRes.png" />
+                                    </image>
+                                </ImageView>
+                                <Label fx:id="physResLabel" prefHeight="16.0" prefWidth="83.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane prefHeight="25.0" prefWidth="115.0" style="-fx-hgap: 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/strikeDef.png" />
+                                    </image>
+                                </ImageView>
+                                <Label fx:id="strikeDefLabel" prefHeight="16.0" prefWidth="83.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane prefHeight="25.0" prefWidth="115.0" style="-fx-hgap: 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/slashDef.png" />
+                                    </image>
+                                </ImageView>
+                                <Label fx:id="slashDefLabel" prefHeight="16.0" prefWidth="83.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane prefHeight="25.0" prefWidth="115.0" style="-fx-hgap: 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/thrustDef.png" />
+                                    </image>
+                                </ImageView>
+                                <Label fx:id="thrustDefLabel" prefHeight="16.0" prefWidth="83.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane prefHeight="25.0" prefWidth="115.0" style="-fx-hgap: 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/magicDef.png" />
+                                    </image>
+                                </ImageView>
+                                <Label fx:id="magicDefLabel" prefHeight="16.0" prefWidth="83.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane prefHeight="25.0" prefWidth="115.0" style="-fx-hgap: 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/fireDef.png" />
+                                    </image>
+                                </ImageView>
+                                <Label fx:id="fireDefLabel" prefHeight="16.0" prefWidth="83.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane prefHeight="25.0" prefWidth="115.0" style="-fx-hgap: 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/lightningDef.png" />
+                                    </image>
+                                </ImageView>
+                                <Label fx:id="lightningDefLabel" prefHeight="16.0" prefWidth="83.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane prefHeight="25.0" prefWidth="115.0" style="-fx-hgap: 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/darkDef.png" />
+                                    </image>
+                                </ImageView>
+                                <Label fx:id="darkDefLabel" prefHeight="16.0" prefWidth="83.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane prefHeight="25.0" prefWidth="115.0" style="-fx-hgap: 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/bleedRes.png" />
+                                    </image>
+                                </ImageView>
+                                <Label fx:id="bleedResLabel" prefHeight="16.0" prefWidth="83.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane prefHeight="25.0" prefWidth="115.0" style="-fx-hgap: 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/poisonRes.png" />
+                                    </image>
+                                </ImageView>
+                                <Label fx:id="poisonResLabel" prefHeight="16.0" prefWidth="83.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane prefHeight="25.0" prefWidth="115.0" style="-fx-hgap: 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/frostRes.png" />
+                                    </image>
+                                </ImageView>
+                                <Label fx:id="frostResLabel" prefHeight="16.0" prefWidth="83.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane prefHeight="25.0" prefWidth="115.0" style="-fx-hgap: 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/curseRes.png" />
+                                    </image>
+                                </ImageView>
+                                <Label fx:id="curseResLabel" prefHeight="16.0" prefWidth="83.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane prefHeight="25.0" prefWidth="115.0" style="-fx-hgap: 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/poise.png" />
+                                    </image>
+                                </ImageView>
+                                <Label fx:id="poiseLabel" prefHeight="16.0" prefWidth="83.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane prefHeight="25.0" prefWidth="115.0" style="-fx-hgap: 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/durability.png" />
+                                    </image>
+                                </ImageView>
+                                <Label fx:id="durabilityLabel" prefHeight="16.0" prefWidth="83.0" />
+                            </children>
+                        </FlowPane>
+                        <FlowPane prefHeight="25.0" prefWidth="115.0" style="-fx-hgap: 5;">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@img/weight.png" />
+                                    </image>
+                                </ImageView>
+                                <Label fx:id="weightLabel" prefHeight="16.0" prefWidth="83.0" />
+                            </children>
+                        </FlowPane>
+                    </children>
+                </FlowPane>
+                <Button layoutX="1052.0" layoutY="637.0" mnemonicParsing="false" onAction="#clearSelection" text="Снять выделение" />
+            <Button layoutX="1052.0" layoutY="603.0" mnemonicParsing="false" onAction="#openWebPage" text="Ссылка" />
+            </children>
+        </AnchorPane>
+    </children>
+    <fx:define>
+        <TreeMap fx:id="labels">
+            <phys_res>
+                <fx:reference source="physResLabel" />
+            </phys_res>
+            <strike_def>
+                <fx:reference source="strikeDefLabel" />
+            </strike_def>
+            <slash_def>
+                <fx:reference source="slashDefLabel" />
+            </slash_def>
+            <thrust_def>
+                <fx:reference source="thrustDefLabel" />
+            </thrust_def>
+            <magic_def>
+                <fx:reference source="magicDefLabel" />
+            </magic_def>
+            <fire_def>
+                <fx:reference source="fireDefLabel" />
+            </fire_def>
+            <lightning_def>
+                <fx:reference source="lightningDefLabel" />
+            </lightning_def>
+            <dark_def>
+                <fx:reference source="darkDefLabel" />
+            </dark_def>
+            <bleed_res>
+                <fx:reference source="bleedResLabel" />
+            </bleed_res>
+            <poison_res>
+                <fx:reference source="poisonResLabel" />
+            </poison_res>
+            <frost_res>
+                <fx:reference source="frostResLabel" />
+            </frost_res>
+            <curse_res>
+                <fx:reference source="curseResLabel" />
+            </curse_res>
+            <poise>
+                <fx:reference source="poiseLabel" />
+            </poise>
+            <durability>
+                <fx:reference source="durabilityLabel" />
+            </durability>
+            <weight>
+                <fx:reference source="weightLabel" />
+            </weight>
+        </TreeMap>
+
+        <TreeMap fx:id="listViews">
+            <helm>
+                <fx:reference source="helmListView" />
+            </helm>
+            <armor>
+                <fx:reference source="armorListView" />
+            </armor>
+            <gauntlets>
+                <fx:reference source="gauntletsListView" />
+            </gauntlets>
+            <legs>
+                <fx:reference source="legsListView" />
+            </legs>
+        </TreeMap>
+
+        <TreeMap fx:id="fromTextFields">
+            <phys_res>
+                <fx:reference source="physResFromTextField" />
+            </phys_res>
+            <strike_def>
+                <fx:reference source="strikeDefFromTextField" />
+            </strike_def>
+            <slash_def>
+                <fx:reference source="slashDefFromTextField" />
+            </slash_def>
+            <thrust_def>
+                <fx:reference source="thrustDefFromTextField" />
+            </thrust_def>
+            <magic_def>
+                <fx:reference source="magicDefFromTextField" />
+            </magic_def>
+            <fire_def>
+                <fx:reference source="fireDefFromTextField" />
+            </fire_def>
+            <lightning_def>
+                <fx:reference source="lightningDefFromTextField" />
+            </lightning_def>
+            <dark_def>
+                <fx:reference source="darkDefFromTextField" />
+            </dark_def>
+            <bleed_res>
+                <fx:reference source="bleedResFromTextField" />
+            </bleed_res>
+            <poison_res>
+                <fx:reference source="poisonResFromTextField" />
+            </poison_res>
+            <frost_res>
+                <fx:reference source="frostResFromTextField" />
+            </frost_res>
+            <curse_res>
+                <fx:reference source="curseResFromTextField" />
+            </curse_res>
+            <poise>
+                <fx:reference source="poiseFromTextField" />
+            </poise>
+            <durability>
+                <fx:reference source="durabilityFromTextField" />
+            </durability>
+            <weight>
+                <fx:reference source="weightFromTextField" />
+            </weight>
+        </TreeMap>
+
+        <TreeMap fx:id="toTextFields">
+            <phys_res>
+                <fx:reference source="physResToTextField" />
+            </phys_res>
+            <strike_def>
+                <fx:reference source="strikeDefToTextField" />
+            </strike_def>
+            <slash_def>
+                <fx:reference source="slashDefToTextField" />
+            </slash_def>
+            <thrust_def>
+                <fx:reference source="thrustDefToTextField" />
+            </thrust_def>
+            <magic_def>
+                <fx:reference source="magicDefToTextField" />
+            </magic_def>
+            <fire_def>
+                <fx:reference source="fireDefToTextField" />
+            </fire_def>
+            <lightning_def>
+                <fx:reference source="lightningDefToTextField" />
+            </lightning_def>
+            <dark_def>
+                <fx:reference source="darkDefToTextField" />
+            </dark_def>
+            <bleed_res>
+                <fx:reference source="bleedResToTextField" />
+            </bleed_res>
+            <poison_res>
+                <fx:reference source="poisonResToTextField" />
+            </poison_res>
+            <frost_res>
+                <fx:reference source="frostResToTextField" />
+            </frost_res>
+            <curse_res>
+                <fx:reference source="curseResToTextField" />
+            </curse_res>
+            <poise>
+                <fx:reference source="poiseToTextField" />
+            </poise>
+            <durability>
+                <fx:reference source="durabilityToTextField" />
+            </durability>
+            <weight>
+                <fx:reference source="weightToTextField" />
+            </weight>
+        </TreeMap>
+
+        <TreeMap fx:id="weightTextFields">
+            <phys_res>
+                <fx:reference source="physResWeightTextField" />
+            </phys_res>
+            <strike_def>
+                <fx:reference source="strikeDefWeightTextField" />
+            </strike_def>
+            <slash_def>
+                <fx:reference source="slashDefWeightTextField" />
+            </slash_def>
+            <thrust_def>
+                <fx:reference source="thrustDefWeightTextField" />
+            </thrust_def>
+            <magic_def>
+                <fx:reference source="magicDefWeightTextField" />
+            </magic_def>
+            <fire_def>
+                <fx:reference source="fireDefWeightTextField" />
+            </fire_def>
+            <lightning_def>
+                <fx:reference source="lightningDefWeightTextField" />
+            </lightning_def>
+            <dark_def>
+                <fx:reference source="darkDefWeightTextField" />
+            </dark_def>
+            <bleed_res>
+                <fx:reference source="bleedResWeightTextField" />
+            </bleed_res>
+            <poison_res>
+                <fx:reference source="poisonResWeightTextField" />
+            </poison_res>
+            <frost_res>
+                <fx:reference source="frostResWeightTextField" />
+            </frost_res>
+            <curse_res>
+                <fx:reference source="curseResWeightTextField" />
+            </curse_res>
+            <poise>
+                <fx:reference source="poiseWeightTextField" />
+            </poise>
+            <durability>
+                <fx:reference source="durabilityWeightTextField" />
+            </durability>
+            <weight>
+                <fx:reference source="weightWeightTextField" />
+            </weight>
+        </TreeMap>
+
+        <TreeMap fx:id="tabs">
+            <helm>
+                <fx:reference source="helmTab" />
+            </helm>
+            <armor>
+                <fx:reference source="armorTab" />
+            </armor>
+            <gauntlets>
+                <fx:reference source="gauntletsTab" />
+            </gauntlets>
+            <legs>
+                <fx:reference source="legsTab" />
+            </legs>
+        </TreeMap>
+
+    </fx:define>
+</GridPane>
